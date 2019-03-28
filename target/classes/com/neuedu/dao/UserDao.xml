@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.dao.UserDao">
+    <select id="login" resultType="User">
+        select id,
+            login_id  as loginId,
+            name,
+            phone,
+            password,
+            sex,
+            birthday,
+            email,
+            address,
+            is_del as isDel
+          from user
+          where login_id=#{loginId}
+    </select>
+    <insert id="add" parameterType="User">
+        insert into user (
+            login_id,
+            name,
+            phone,
+            password,
+            sex,
+            birthday,
+            email,
+            address,
+            is_del
+        ) values (
+            #{loginId},
+            #{name},
+            #{phone},
+            #{password},
+            #{sex},
+            #{birthday},
+            #{email},
+            #{address},
+            #{isDel}
+        )
+    </insert>
+    <insert id="batch" parameterType="java.util.List">
+        insert into user
+        (
+        login_id,
+        name,
+        phone,
+        password,
+        sex,
+        birthday,
+        email,
+        address,
+        is_del
+        ) values
+          <foreach collection="list" item="user" separator=",">
+              (
+                  #{user.loginId},
+                  #{user.name},
+                  #{user.phone},
+                  #{user.password},
+                  #{user.sex},
+                  #{user.birthday},
+                  #{user.email},
+                  #{user.address},
+                  #{user.isDel}
+              )
+          </foreach>
+    </insert>
+    <select id="list" resultType="User">
+         select id,
+            login_id as loginId,
+            name,
+            phone,
+            password,
+            sex,
+            birthday,
+            email,
+            address,
+            is_del as isDel
+          from user
+            <if test="withPage == 1">
+                limit #{pageStart},#{pageSize}
+            </if>
+    </select>
+    <select id="count" resultType="Integer" parameterType="User" >
+        select count(id) from user
+    </select>
+</mapper>
